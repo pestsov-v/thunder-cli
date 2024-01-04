@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/pestsov-v/thunder-cli#readme",
   "dependencies": {
+    "inquirer": "^8.2.5",
     "inversify": "^6.0.2"
   }
 }
