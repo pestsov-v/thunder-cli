@@ -1,0 +1,1 @@
+export {inject, injectable, Container, ContainerModule} from 'inversify'

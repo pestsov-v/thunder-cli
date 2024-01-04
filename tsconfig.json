@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": false,
+    "strict": true,
+    "skipLibCheck": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "rootDir": "./src",
+    "paths": {
+      "@Cli/Symbols": ["./src/ioc/cli.ioc.symbols.ts"],
+      "@Cli/Container": ["./src/ioc/cli.ioc.ts"],
+      "@Cli/Types": ["./types/index.d.ts"],
+    }
+  }
+}
