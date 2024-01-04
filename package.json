@@ -3,18 +3,20 @@
   "description": "Command line interface for install and administrate @chaminjector schemas.",
   "version": "1.0.0",
   "main": "index.js",
-  "devDependencies": {},
   "scripts": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pestsov-v/thunder-cli.git"
   },
-  "keywords": ["thunder-cli", "installer", "administrate-schemas"],
+  "keywords": [
+    "thunder-cli",
+    "installer",
+    "administrate-schemas"
+  ],
   "author": {
     "name": "Vladyslav Pestsov",
     "email": "vladyslav.pestsov@gmail.com"
   },
-
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/pestsov-v/thunder-cli/issues"
@@ -23,5 +25,10 @@
   "dependencies": {
     "inquirer": "^8.2.5",
     "inversify": "^6.0.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.3.3"
   }
 }
