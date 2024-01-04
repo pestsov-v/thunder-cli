@@ -1,9 +1,11 @@
 {
   "name": "@chaminjector/thunder-cli",
-  "description": "Command line interface for install and administrate @chaminjector schemas.",
+  "description": "Command line interface for install and administrate @chaminjector cores",
   "version": "1.0.0",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "start:dev": "ts-node -r tsconfig-paths/register --files ./src/index.ts"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pestsov-v/thunder-cli.git"
