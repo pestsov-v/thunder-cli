@@ -23,6 +23,7 @@ export abstract class AbstractService implements IAbstractService {
     public async stop(): Promise<void> {
         try {
             await this.destroy()
+            console.log(`Service "${this._SERVICE_NAME}" has stopped.`)
         } catch (e) {
             console.error(e)
             throw e
