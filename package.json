@@ -1,8 +1,11 @@
 {
   "name": "@chaminjector/thunder-cli",
   "description": "Command line interface for install and administrate @chaminjector cores",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "main": "index.js",
+  "bin": {
+    "create-chaminjector-schema": "./index.js"
+  },
   "scripts": {
     "start:dev": "ts-node -r tsconfig-paths/register --files ./src/index.ts"
   },
@@ -13,7 +16,7 @@
   "keywords": [
     "thunder-cli",
     "installer",
-    "administrate-schemas"
+    "schema-administrate"
   ],
   "author": {
     "name": "Vladyslav Pestsov",
@@ -25,6 +28,7 @@
   },
   "homepage": "https://github.com/pestsov-v/thunder-cli#readme",
   "dependencies": {
+    "@chaminjector/seeds-discovery-service": "^0.0.2",
     "axios": "^1.6.4",
     "inquirer": "^8.2.5",
     "inversify": "^6.0.2",
