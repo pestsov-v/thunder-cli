@@ -1,13 +1,25 @@
 {
-  "name": "@chaminjector/thunder-cli",
-  "description": "Command line interface for install and administrate @chaminjector cores",
+  "name": "@chaminjector/cli",
+  "description": "Command line interface for install and administrate @chaminjector cores.",
   "version": "0.0.1",
   "main": "index.js",
+  "types": "index.d.ts",
   "bin": {
     "create-chaminjector-schema": "./index.js"
   },
+  "files": [
+    "./*"
+  ],
   "scripts": {
-    "start:dev": "ts-node -r tsconfig-paths/register --files ./src/index.ts"
+    "start:dev": "ts-node -r tsconfig-paths/register --files ./src/index.ts",
+    "build:packages": "rm -rf dist && tsc -p tsconfig.cjs.json && tsc -p tsconfig.types.json && cp package.json dist/package.json",
+    "add:types": "cp -r types dist/types",
+    "add:imports": "echo 'export * from \"../types\";' >> ./dist/_types/index.d.ts",
+    "add:package": "echo '{\"type\": \"commonjs\"}' > dist/_cjs/package.json && cp README.md dist/README.md",
+    "build:dist": "npm run build:packages && npm run add:types && npm run add:imports && npm run add:package",
+    "resolve:path": "tsc-alias -v --dir dist/_cjs -p tsconfig.cjs.json && tsc-alias -v --dir dist/_types -p tsconfig.types.json",
+    "build:prod": "npm run build:dist && npm run resolve:path",
+    "start:prod": "node ./_cjs/index.js"
   },
   "repository": {
     "type": "git",
@@ -18,6 +30,22 @@
     "installer",
     "schema-administrate"
   ],
+  "exports": {
+    ".": {
+      "types": "./_types/*.d.ts",
+      "node": "./_cjs/index.js",
+      "require": "./_cjs/index.js",
+      "default": "./cjs/index.js"
+    }
+  },
+  "typesVersions": {
+    ">=4.2": {
+      "*": [
+        "_types/*",
+        "types/*"
+      ]
+    }
+  },
   "author": {
     "name": "Vladyslav Pestsov",
     "email": "vladyslav.pestsov@gmail.com"
@@ -30,13 +58,16 @@
   "dependencies": {
     "@chaminjector/seeds-discovery-service": "^0.0.2",
     "axios": "^1.6.4",
+    "execa": "^3.4.0",
     "inquirer": "^8.2.5",
     "inversify": "^6.0.2",
     "reflect-metadata": "^0.2.1"
   },
   "devDependencies": {
+    "@types/cli-progress": "^3.11.5",
     "@types/inquirer": "^9.0.7",
     "ts-node": "^10.9.2",
+    "tsc-alias": "^1.8.8",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.3.3"
   }

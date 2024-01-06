@@ -1,7 +1,8 @@
-import {injectable, inject} from '../packages'
-import {AbstractService} from "./abstract.service";
-import {IAbstractMenu, IDiscoveryService, IManageService} from "@Cli/Types";
+import {injectable, inject} from '@Packages'
 import {CliSymbols} from "@Cli/Symbols";
+import {AbstractService} from "./abstract.service";
+
+import type {IAbstractMenu, IDiscoveryService, IManageService} from "@Cli/Types";
 
 @injectable()
 export class ManageService extends AbstractService implements IManageService {

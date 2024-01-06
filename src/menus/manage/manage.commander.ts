@@ -1,5 +1,6 @@
-import {injectable} from '../../packages'
-import {IManageCommander} from "@Cli/Types";
+import {injectable} from '@Packages'
+
+import type {IManageCommander} from "@Cli/Types";
 @injectable()
 export class ManageCommander implements IManageCommander {
 

@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import {Container} from '../packages'
+import {Container} from '@Packages'
 
 const mode = process.env.SCHEMA_PROFILE ?? 'default'
 const modulePath = `./cli.${mode}.ioc.module`

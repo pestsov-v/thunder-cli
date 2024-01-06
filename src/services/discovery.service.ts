@@ -1,7 +1,8 @@
 import {AbstractDiscoveryService, IAbstractDiscoveryService} from '@chaminjector/seeds-discovery-service'
-import {injectable} from '../packages'
+import {injectable} from '@Packages'
 import {AbstractService} from "./abstract.service";
-import {IDiscoveryService} from "@Cli/Types";
+
+import type {IDiscoveryService} from "@Cli/Types";
 
 
 @injectable()

@@ -1,6 +1,7 @@
-import {injectable, inject} from './packages'
-import {IDiscoveryService, IInitiator, IManageService} from "@Cli/Types";
+import {injectable, inject} from '@Packages'
 import {CliSymbols} from "@Cli/Symbols";
+
+import type {IDiscoveryService, IInitiator, IManageService} from "@Cli/Types";
 
 @injectable()
 export class Initiator implements IInitiator {

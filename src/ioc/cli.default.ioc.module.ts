@@ -1,16 +1,24 @@
-import {ContainerModule} from '../packages'
+import {ContainerModule} from '@Packages'
 import {CliSymbols} from "@Cli/Symbols";
 import {Initiator} from "../initiator";
 import {DiscoveryService, ManageService} from "../services";
-import {InstallerCommander, InstallerMenu, ManageCommander, ManageMenu} from "../menus";
-
 import {
+    InstallerMenu,
+    ManageCommander,
+    ManageMenu,
+    EdgeMenu,
+    VisualizerMenu,
+    ServerMenu,
+    ServerCommander
+} from "../menus";
+
+import type {
     IAbstractMenu,
     IDiscoveryService,
     IInitiator,
-    IInstallerCommander,
     IManageCommander,
-    IManageService
+    IManageService,
+    IServerCommander
 } from "@Cli/Types";
 
 
@@ -20,7 +28,10 @@ export const CliModule = new ContainerModule((bind) => {
     bind<IManageService>(CliSymbols.ManageService).to(ManageService).inSingletonScope()
 
     // Menus
-    bind<IInstallerCommander>(CliSymbols.InstallerCommander).to(InstallerCommander).inSingletonScope()
+    bind<IAbstractMenu>(CliSymbols.ServerMenu).to(ServerMenu).inTransientScope()
+    bind<IServerCommander>(CliSymbols.ServerCommander).to(ServerCommander).inSingletonScope()
+    bind<IAbstractMenu>(CliSymbols.EdgeMenu).to(EdgeMenu).inTransientScope()
+    bind<IAbstractMenu>(CliSymbols.VisualizerMenu).to(VisualizerMenu).inTransientScope()
     bind<IAbstractMenu>(CliSymbols.InstallerMenu).to(InstallerMenu).inTransientScope()
     bind<IManageCommander>(CliSymbols.ManageCommander).to(ManageCommander).inSingletonScope()
     bind<IAbstractMenu>(CliSymbols.ManageMenu).to(ManageMenu).inTransientScope()

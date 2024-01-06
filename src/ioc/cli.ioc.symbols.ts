@@ -4,7 +4,10 @@ export const CliSymbols = {
     ManageService: Symbol('ManageService'),
 
     // Menus
-    InstallerCommander: Symbol('InstallerCommander'),
+    EdgeMenu: Symbol('EdgeMenu'),
+    ServerMenu: Symbol('ServerMenu'),
+    ServerCommander: Symbol('ServerCommander'),
+    VisualizerMenu: Symbol('VisualizerMenu'),
     InstallerMenu: Symbol('InstallerMenu'),
     ManageCommander: Symbol('ManageCommander'),
     ManageMenu: Symbol('ManageMenu'),

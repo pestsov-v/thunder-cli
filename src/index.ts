@@ -1,7 +1,7 @@
 import {container} from '@Cli/Container'
 import {CliSymbols} from "@Cli/Symbols";
 
-import {IInitiator} from "@Cli/Types";
+import type {IInitiator} from "@Cli/Types";
 
 const nodeVersion = Number(process.versions.node.split('.')[0]);
 

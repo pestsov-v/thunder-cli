@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
-    "target": "es2016",
-    "module": "commonjs",
+    "target": "ESNext",
+    "module": "CommonJS",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "Node",
+    "newLine": "lf",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": false,
     "strict": true,
@@ -14,7 +16,10 @@
     "paths": {
       "@Cli/Symbols": ["./src/ioc/cli.ioc.symbols.ts"],
       "@Cli/Container": ["./src/ioc/cli.ioc.ts"],
+      "@Packages": ["./src/packages/index.ts"],
       "@Cli/Types": ["./types/index.d.ts"],
     }
-  }
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules", "dist"]
 }

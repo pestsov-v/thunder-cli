@@ -1,4 +1,4 @@
-import {injectable} from '../packages'
+import {injectable} from '@Packages'
 import {IAbstractService, IDiscoveryService} from "@Cli/Types";
 
 @injectable()

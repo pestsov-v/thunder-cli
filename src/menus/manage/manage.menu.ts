@@ -1,6 +1,7 @@
-import {injectable, inject, inquirer} from '../../packages'
+import {injectable, inject, inquirer} from '@Packages'
 import {CliSymbols} from "@Cli/Symbols";
 import {AbstractMenu} from "../abstract.menu";
+
 import {IManageCommander, NManageMenu} from "@Cli/Types";
 
 @injectable()

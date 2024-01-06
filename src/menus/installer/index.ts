@@ -1,2 +1,2 @@
-export * from './installer.commander'
+export * from './platform-parts'
 export * from './installer.menu'

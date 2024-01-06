@@ -1,4 +1,4 @@
-import {injectable } from '../packages'
+import {injectable } from '@Packages'
 
 @injectable()
 export abstract class AbstractMenu {
