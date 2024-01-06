@@ -1,6 +1,6 @@
-import {injectable } from '@Packages'
+import { injectable } from '@Packages';
 
 @injectable()
 export abstract class AbstractMenu {
-    public abstract menu(): Promise<void>
+  public abstract menu(): Promise<void>;
 }

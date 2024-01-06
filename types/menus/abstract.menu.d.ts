@@ -1,3 +1,3 @@
 export interface IAbstractMenu {
-    menu(): Promise<void>
+  menu(): Promise<void>;
 }

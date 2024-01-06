@@ -1,4 +1,4 @@
 export interface IInitiator {
-    start(): Promise<void>
-    stop(): Promise<void>
+  start(): Promise<void>;
+  stop(): Promise<void>;
 }

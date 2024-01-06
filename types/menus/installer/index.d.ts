@@ -1,2 +1,1 @@
-export * from './platform-parts'
-export * from './installer.menu'
+export * from './platform-parts';

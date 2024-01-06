@@ -1,4 +1,4 @@
-export * from './abstract.menu'
+export * from './abstract.menu';
 
-export * from './installer'
-export * from './manage'
+export * from './installer';
+export * from './manage';

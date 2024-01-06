@@ -1,7 +1,10 @@
 export interface IAbstractPlatformPartCommander {
-    install(): Promise<void>
+  install(): Promise<void>;
 }
 
 export namespace NAbstractPlatformPartCommander {
-    export type Package = '@chaminjector/server@latest' | '@chaminjector/visualizer@latest' | '@chaminjector/web-client@latest'
+  export type Package =
+    | '@chaminjector/server@latest'
+    | '@chaminjector/visualizer@latest'
+    | '@chaminjector/web-client@latest';
 }
