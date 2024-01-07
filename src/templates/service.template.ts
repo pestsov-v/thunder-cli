@@ -77,4 +77,52 @@ startServer().catch((e) => {
     console.log('Server end with error: ', e);
 });`;
   }
+
+  public get pagesApp(): string {
+    return `import './globals.css';
+
+export default function MyApp(props: AppProps) {
+  return (
+      <props.Component {...props.pageProps} />
+  );
+}`;
+  }
+
+  public get pagesDocument(): string {
+    return `import { Html, Head, Main, NextScript } from 'next/document';
+
+export default function Document() {
+  return (
+    <Html lang="en">
+      <Head />
+      <body>
+        <Main />
+        <NextScript />
+      </body>
+    </Html>
+  );
+}
+`;
+  }
+
+  public get pagesHome(): string {
+    return `import type { GetServerSideProps } from 'next';
+
+export default function Home(props: {name: string}) {
+  return (
+    <div>
+        {props.name}
+     </div>
+  );
+}
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  return {
+    props: {
+        name: "Victor"
+    },
+  };
+};
+`;
+  }
 }

@@ -1,3 +1,5 @@
+#!/usr/bin/node
+
 import { container } from '@Cli/Container';
 import { CliSymbols } from '@Cli/Symbols';
 

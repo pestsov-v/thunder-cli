@@ -2,18 +2,15 @@ import { NInstallerMenu } from './installer.menu';
 
 export interface IInstallerCommander {
   makeProjectDirectory(path: string): Promise<void>;
-  buildPackage(path: string, options: NInstallCommander.PackageOptions): Promise<void>;
-  buildTsconfig(path: string, options: NInstallCommander.TsconfigOptions): Promise<void>;
-  buildEslint(path: string): Promise<void>;
-  buildPrettier(path: string): Promise<void>;
+  buildPackage(path: string, options: NInstallerCommander.PackageOptions): Promise<void>;
   makeProjectDirectories(
     path: string,
-    options: NInstallCommander.DirectoriesOptions
+    options: NInstallerCommander.DirectoriesOptions
   ): Promise<void>;
   makeSchemaEntryPoint(path: string, application: string): Promise<void>;
 }
 
-export namespace NInstallCommander {
+export namespace NInstallerCommander {
   export type Packages =
     | 'chaminjector/server@latest'
     | 'chaminjector/web-client@latest'

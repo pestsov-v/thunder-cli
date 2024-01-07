@@ -10,11 +10,13 @@ import {
   ServiceTemplate,
 } from '../templates';
 import {
+  CodeFormatterCommander,
   InstallerCommander,
   InstallerMenu,
   ManageCommander,
   ManageMenu,
   ServerCommander,
+  TypescriptCommander,
   VisualizerCommander,
   WebClientCommander,
 } from '../menus';
@@ -34,6 +36,8 @@ import type {
   IInstallerCommander,
   IWebClientCommander,
   IVisualizerCommander,
+  ICodeFormatterCommander,
+  ITypescriptCommander,
 } from '@Cli/Types';
 
 export const CliModule = new ContainerModule((bind) => {
@@ -55,6 +59,12 @@ export const CliModule = new ContainerModule((bind) => {
     .inSingletonScope();
   bind<IVisualizerCommander>(CliSymbols.VisualizerCommander)
     .to(VisualizerCommander)
+    .inSingletonScope();
+  bind<ICodeFormatterCommander>(CliSymbols.CodeFormatterCommander)
+    .to(CodeFormatterCommander)
+    .inSingletonScope();
+  bind<ITypescriptCommander>(CliSymbols.TypescriptCommander)
+    .to(TypescriptCommander)
     .inSingletonScope();
   bind<IInstallerCommander>(CliSymbols.InstallCommander).to(InstallerCommander).inSingletonScope();
   bind<IAbstractMenu>(CliSymbols.InstallerMenu).to(InstallerMenu).inTransientScope();

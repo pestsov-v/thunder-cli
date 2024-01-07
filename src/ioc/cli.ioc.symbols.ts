@@ -14,6 +14,8 @@ export const CliSymbols = {
   ServerCommander: Symbol('ServerCommander'),
   WebClientCommander: Symbol('WebClientCommander'),
   VisualizerCommander: Symbol('VisualizerCommander'),
+  CodeFormatterCommander: Symbol('CodeFormatterCommander'),
+  TypescriptCommander: Symbol('TypescriptCommander'),
   InstallCommander: Symbol('InstallCommander'),
   InstallerMenu: Symbol('InstallerMenu'),
   ManageCommander: Symbol('ManageCommander'),

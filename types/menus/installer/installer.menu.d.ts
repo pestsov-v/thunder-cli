@@ -1,4 +1,4 @@
-import { NInstallCommander } from './installer.commander';
+import { NInstallerCommander } from './installer.commander';
 
 export namespace NInstallerMenu {
   export type PackageFormFields = {
@@ -6,7 +6,7 @@ export namespace NInstallerMenu {
     description?: string;
     version: string;
     platformParts: PlatformPartFields[];
-    tsExtends: NInstallCommander.TsconfigBuildFormatExtends[];
+    tsExtends: NInstallerCommander.TsconfigBuildFormatExtends[];
     eslintPrettier: boolean;
   };
 
@@ -22,7 +22,7 @@ export namespace NInstallerMenu {
     PACKAGE_NAME: string;
     PACKAGE_DESCRIPTION: string;
     PACKAGE_VERSION: string;
-    TYPESCRIPT_EXTENDS: NInstallCommander.TsconfigBuildFormatExtends[];
+    TYPESCRIPT_EXTENDS: NInstallerCommander.TsconfigBuildFormatExtends[];
     PLATFORM_PARTS: PlatformPartFields[];
     ESLINT_WITH_PRETTIER: boolean;
   };

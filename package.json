@@ -1,11 +1,11 @@
 {
   "name": "@chaminjector/cli",
   "description": "Command line interface for install and administrate @chaminjector cores.",
-  "version": "0.0.1",
+  "version": "0.0.7",
   "main": "index.js",
   "types": "index.d.ts",
   "bin": {
-    "create-chaminjector-schema": "./index.js"
+    "chaminjector": "./_cjs/index.js"
   },
   "files": [
     "./*"

@@ -4,31 +4,16 @@ import { CliSymbols } from '@Cli/Symbols';
 
 import type {
   IServiceTemplate,
-  IEslintTemplate,
   IInstallerCommander,
+  NInstallerCommander,
   IPackageTemplate,
-  IPrettierTemplate,
-  ITsconfigTemplate,
-  NInstallCommander,
 } from '@Cli/Types';
 
 @injectable()
 export class InstallerCommander implements IInstallerCommander {
-  public async makeProjectDirectory(path: string): Promise<void> {
-    try {
-      const exists = await fse.pathExists(path);
-      if (!exists) {
-        await fse.ensureDir(path);
-      }
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
-  }
-
   public async buildPackage(
     path: string,
-    options: NInstallCommander.PackageOptions
+    options: NInstallerCommander.PackageOptions
   ): Promise<void> {
     const template = container.get<IPackageTemplate>(CliSymbols.PackageTemplate).structure({
       name: options.name,
@@ -49,58 +34,12 @@ export class InstallerCommander implements IInstallerCommander {
     }
   }
 
-  public async buildTsconfig(
-    path: string,
-    options: NInstallCommander.TsconfigOptions
-  ): Promise<void> {
-    const engine = container.get<ITsconfigTemplate>(CliSymbols.TsconfigTemplate);
-
-    const baseTemplate = engine.structure({
-      application: options.application,
-      webClient: true,
-      server: true,
-      addAlias: true,
-    });
-
+  public async makeProjectDirectory(path: string): Promise<void> {
     try {
-      await fse.writeJSON(path + '/tsconfig.json', baseTemplate);
-      if (options.formatExtends.length > 0) {
-        for (const index in options.formatExtends) {
-          const format = options.formatExtends[index];
-          switch (format) {
-            case 'CommonJS':
-              await fse.writeJSON(path + '/tsconfig.cjs.json', engine.cjsTemplate);
-              break;
-            case 'Typescript':
-              await fse.writeJSON(path + '/tsconfig.types.json', engine.typesTemplate);
-              break;
-          }
-        }
+      const exists = await fse.pathExists(path);
+      if (!exists) {
+        await fse.ensureDir(path);
       }
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
-  }
-
-  public async buildEslint(path: string): Promise<void> {
-    const engine = container.get<IEslintTemplate>(CliSymbols.EslintTemplate);
-
-    try {
-      await fse.writeJSON(path + '/.eslintrc.json', engine.structure({}));
-      await fse.writeFile(path + '/.eslintignore', engine.eslintIgnore);
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
-  }
-
-  public async buildPrettier(path: string): Promise<void> {
-    const engine = container.get<IPrettierTemplate>(CliSymbols.PrettierTemplate);
-
-    try {
-      await fse.writeJSON(path + '/.prettierrc', engine.structure({}));
-      await fse.writeFile(path + '/.prettierignore', engine.prettierIgnore);
     } catch (e) {
       console.error(e);
       throw e;
@@ -109,7 +48,7 @@ export class InstallerCommander implements IInstallerCommander {
 
   public async makeProjectDirectories(
     path: string,
-    options: NInstallCommander.DirectoriesOptions
+    options: NInstallerCommander.DirectoriesOptions
   ): Promise<void> {
     try {
       await fse.ensureDir(path + '/configs');

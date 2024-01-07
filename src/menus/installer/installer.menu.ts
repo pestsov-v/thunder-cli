@@ -4,8 +4,10 @@ import { AbstractMenu } from '../abstract.menu';
 
 import type {
   IAbstractMenu,
+  ICodeFormatterCommander,
   IInstallerCommander,
   IServerCommander,
+  ITypescriptCommander,
   IVisualizerCommander,
   IWebClientCommander,
   NInstallerMenu,
@@ -21,7 +23,11 @@ export class InstallerMenu extends AbstractMenu implements IAbstractMenu {
     @inject(CliSymbols.WebClientCommander)
     private readonly _webClientCommander: IWebClientCommander,
     @inject(CliSymbols.VisualizerCommander)
-    private readonly _visualizerCommander: IVisualizerCommander
+    private readonly _visualizerCommander: IVisualizerCommander,
+    @inject(CliSymbols.CodeFormatterCommander)
+    private readonly _codeFormatterCommander: ICodeFormatterCommander,
+    @inject(CliSymbols.TypescriptCommander)
+    private readonly _typescriptCommander: ITypescriptCommander
   ) {
     super();
   }
@@ -51,13 +57,12 @@ export class InstallerMenu extends AbstractMenu implements IAbstractMenu {
         description: answers.description,
         version: answers.version,
       });
-      await this._installerCommander.buildTsconfig(PROJECT_DIRECTORY_PATH, {
+      await this._typescriptCommander.build(PROJECT_DIRECTORY_PATH, {
         application: answers.name,
         formatExtends: answers.tsExtends,
         platformParts: answers.platformParts,
       });
-      await this._installerCommander.buildEslint(PROJECT_DIRECTORY_PATH);
-      await this._installerCommander.buildPrettier(PROJECT_DIRECTORY_PATH);
+      await this._codeFormatterCommander.build(PROJECT_DIRECTORY_PATH);
       await this._installerCommander.makeProjectDirectories(PROJECT_DIRECTORY_PATH, {
         server: true,
         service: answers.name,
@@ -65,6 +70,7 @@ export class InstallerMenu extends AbstractMenu implements IAbstractMenu {
         visualizer: true,
       });
       await this._installerCommander.makeSchemaEntryPoint(PROJECT_DIRECTORY_PATH, answers.name);
+      await this._webClientCommander.build(PROJECT_DIRECTORY_PATH, answers.name);
 
       await Promise.all([
         answers.platformParts.includes('Server')
@@ -75,6 +81,9 @@ export class InstallerMenu extends AbstractMenu implements IAbstractMenu {
           : true,
         answers.platformParts.includes('Visualizer')
           ? await this._visualizerCommander.install(PROJECT_DIRECTORY_PATH)
+          : true,
+        answers.eslintPrettier
+          ? await this._codeFormatterCommander.install(PROJECT_DIRECTORY_PATH)
           : true,
       ]);
     } catch (e) {

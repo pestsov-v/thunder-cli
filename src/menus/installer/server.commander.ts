@@ -8,19 +8,10 @@ import type { IServerCommander, IServiceTemplate } from '@Cli/Types';
 export class ServerCommander implements IServerCommander {
   public async install(path: string): Promise<void> {
     try {
-      await execa(
-        'npm',
-        [
-          'install',
-          '@chaminjector/server@latest',
-          '@chaminjector/web-client@latest',
-          '@chaminjector/visualizer@latest',
-        ],
-        {
-          stdio: 'inherit',
-          cwd: path,
-        }
-      );
+      await execa('npm', ['install', '@chaminjector/server@latest'], {
+        stdio: 'inherit',
+        cwd: path,
+      });
     } catch (e) {
       console.error(e);
       throw e;
@@ -28,9 +19,14 @@ export class ServerCommander implements IServerCommander {
   }
 
   public async connect(path: string): Promise<void> {
-    await fse.writeFile(
-      path + '/server.ts',
-      container.get<IServiceTemplate>(CliSymbols.ServiceTemplate).serverConnectTemplate
-    );
+    try {
+      await fse.writeFile(
+        path + '/server.ts',
+        container.get<IServiceTemplate>(CliSymbols.ServiceTemplate).serverConnectTemplate
+      );
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
   }
 }
