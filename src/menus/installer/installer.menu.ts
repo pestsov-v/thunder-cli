@@ -2,64 +2,85 @@ import { injectable, inject, inquirer } from '@Packages';
 import { CliSymbols } from '@Cli/Symbols';
 import { AbstractMenu } from '../abstract.menu';
 
-import type { IAbstractMenu, IInstallerCommander, NInstallerMenu } from '@Cli/Types';
+import type {
+  IAbstractMenu,
+  IInstallerCommander,
+  IServerCommander,
+  IVisualizerCommander,
+  IWebClientCommander,
+  NInstallerMenu,
+} from '@Cli/Types';
 
 @injectable()
 export class InstallerMenu extends AbstractMenu implements IAbstractMenu {
   constructor(
     @inject(CliSymbols.InstallCommander)
-    private readonly _installerCommander: IInstallerCommander
+    private readonly _installerCommander: IInstallerCommander,
+    @inject(CliSymbols.ServerCommander)
+    private readonly _serverCommander: IServerCommander,
+    @inject(CliSymbols.WebClientCommander)
+    private readonly _webClientCommander: IWebClientCommander,
+    @inject(CliSymbols.VisualizerCommander)
+    private readonly _visualizerCommander: IVisualizerCommander
   ) {
     super();
   }
 
   private _promptNames = {
     PROJECT_DIRECTORY_PATH: 'PROJECT_DIRECTORY_PATH',
-    INSTALL_SERVER: 'INSTALL_SERVER',
-    EDGE: 'EDGE',
-    VISUALIZER: 'VISUALIZER',
-    SRC_FOLDER_EXISTS: 'SRC_FOLDER_EXISTS',
   };
 
   private _promptMessages = {
     PROJECT_DIRECTORY_PATH: 'Where is install schemas project?',
-    INSTALL_SERVER: 'Install compute server core?',
-    EDGE: 'Install edge web client core?',
-    VISUALIZER: 'Install visualizer web client core?',
-    SRC_FOLDER_EXISTS:
-      'The "src" folder already exists. Do you confirm the deletion of the previous one for the subsequent installation of project files?`',
   };
 
   public async menu(): Promise<void> {
-    const { PROJECT_DIRECTORY_PATH } = await inquirer.prompt<typeof this._promptMessages>({
-      type: 'input',
-      name: this._promptNames.PROJECT_DIRECTORY_PATH,
-      message: this._promptMessages.PROJECT_DIRECTORY_PATH,
-      default: `./loc/des`,
-    });
+    try {
+      const { PROJECT_DIRECTORY_PATH } = await inquirer.prompt<typeof this._promptMessages>({
+        type: 'input',
+        name: this._promptNames.PROJECT_DIRECTORY_PATH,
+        message: this._promptMessages.PROJECT_DIRECTORY_PATH,
+        default: `./loc/des`,
+      });
 
-    // const { INSTALL_SERVER } = await inquirer.prompt<typeof this._promptMessages>({
-    //   type: 'confirm',
-    //   name: this._promptNames.INSTALL_SERVER,
-    //   message: this._promptMessages.INSTALL_SERVER,
-    // });
-    //
-    // const { EDGE } = await inquirer.prompt<typeof this._promptMessages>({
-    //   type: 'confirm',
-    //   name: this._promptNames.EDGE,
-    //   message: this._promptMessages.EDGE,
-    // });
-    //
-    // const { VISUALIZER } = await inquirer.prompt<typeof this._promptMessages>({
-    //   type: 'confirm',
-    //   name: this._promptNames.VISUALIZER,
-    //   message: this._promptMessages.VISUALIZER,
-    // });
+      await this._installerCommander.makeProjectDirectory(PROJECT_DIRECTORY_PATH);
 
-    await this._installerCommander.makeProjectDirectory(PROJECT_DIRECTORY_PATH);
+      const answers = await this._installPackageForm();
+      await this._installerCommander.buildPackage(PROJECT_DIRECTORY_PATH, {
+        name: answers.name,
+        description: answers.description,
+        version: answers.version,
+      });
+      await this._installerCommander.buildTsconfig(PROJECT_DIRECTORY_PATH, {
+        application: answers.name,
+        formatExtends: answers.tsExtends,
+        platformParts: answers.platformParts,
+      });
+      await this._installerCommander.buildEslint(PROJECT_DIRECTORY_PATH);
+      await this._installerCommander.buildPrettier(PROJECT_DIRECTORY_PATH);
+      await this._installerCommander.makeProjectDirectories(PROJECT_DIRECTORY_PATH, {
+        server: true,
+        service: answers.name,
+        webClient: true,
+        visualizer: true,
+      });
+      await this._installerCommander.makeSchemaEntryPoint(PROJECT_DIRECTORY_PATH, answers.name);
 
-    const answers = await this._installPackageForm();
-    await this._installerCommander.buildPackageJson(PROJECT_DIRECTORY_PATH, answers);
+      await Promise.all([
+        answers.platformParts.includes('Server')
+          ? await this._serverCommander.install(PROJECT_DIRECTORY_PATH)
+          : true,
+        answers.platformParts.includes('Web-client')
+          ? await this._webClientCommander.install(PROJECT_DIRECTORY_PATH)
+          : true,
+        answers.platformParts.includes('Visualizer')
+          ? await this._visualizerCommander.install(PROJECT_DIRECTORY_PATH)
+          : true,
+      ]);
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
   }
 
   private async _installPackageForm(): Promise<NInstallerMenu.PackageFormFields> {
@@ -78,6 +99,23 @@ export class InstallerMenu extends AbstractMenu implements IAbstractMenu {
         message: 'Enter the schema version in x.x.x format',
         default: '0.0.1',
       },
+      TYPESCRIPT_EXTENDS: {
+        type: 'checkbox',
+        message: 'Which compilation format to include in the project?',
+        choices: ['CommonJS', 'Typescript'],
+        default: ['CommonJS', 'Typescript'],
+      },
+      PLATFORM_PARTS: {
+        type: 'checkbox',
+        message: 'Choose which parts of the platform to install and which ones to connect',
+        choices: ['Web-client', 'Server', 'Visualizer'],
+        default: ['Web-client', 'Server', 'Visualizer'],
+      },
+      ESLINT_WITH_PRETTIER: {
+        type: 'confirm',
+        message: 'Add ESLint with prettier in schema?',
+        default: true,
+      },
     });
 
     return {
@@ -86,6 +124,9 @@ export class InstallerMenu extends AbstractMenu implements IAbstractMenu {
         ? undefined
         : answers.PACKAGE_DESCRIPTION,
       version: answers.PACKAGE_VERSION,
+      tsExtends: answers.TYPESCRIPT_EXTENDS,
+      platformParts: answers.PLATFORM_PARTS,
+      eslintPrettier: answers.ESLINT_WITH_PRETTIER,
     };
   }
 }

@@ -4,14 +4,16 @@ export const CliSymbols = {
   ManageService: Symbol('ManageService'),
 
   // templates
+  PrettierTemplate: Symbol('PrettierTemplate'),
+  EslintTemplate: Symbol('EslintTemplate'),
   PackageTemplate: Symbol('PackageTemplate'),
   TsconfigTemplate: Symbol('TsconfigTemplate'),
+  ServiceTemplate: Symbol('ServiceTemplate'),
 
   // Menus
-  EdgeMenu: Symbol('EdgeMenu'),
-  ServerMenu: Symbol('ServerMenu'),
   ServerCommander: Symbol('ServerCommander'),
-  VisualizerMenu: Symbol('VisualizerMenu'),
+  WebClientCommander: Symbol('WebClientCommander'),
+  VisualizerCommander: Symbol('VisualizerCommander'),
   InstallCommander: Symbol('InstallCommander'),
   InstallerMenu: Symbol('InstallerMenu'),
   ManageCommander: Symbol('ManageCommander'),

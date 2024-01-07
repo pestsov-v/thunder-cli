@@ -3,26 +3,37 @@ import { CliSymbols } from '@Cli/Symbols';
 import { Initiator } from '../initiator';
 import { DiscoveryService, ManageService } from '../services';
 import {
+  EslintTemplate,
+  PackageTemplate,
+  PrettierTemplate,
+  TsconfigTemplate,
+  ServiceTemplate,
+} from '../templates';
+import {
   InstallerCommander,
   InstallerMenu,
   ManageCommander,
   ManageMenu,
-  EdgeMenu,
-  VisualizerMenu,
-  ServerMenu,
   ServerCommander,
+  VisualizerCommander,
+  WebClientCommander,
 } from '../menus';
-import { PackageTemplate, TsconfigTemplate } from '../templates';
 
 import type {
   IAbstractMenu,
   IDiscoveryService,
+  IEslintTemplate,
   IInitiator,
   IManageCommander,
   IManageService,
   IPackageTemplate,
+  IPrettierTemplate,
   IServerCommander,
   ITsconfigTemplate,
+  IServiceTemplate,
+  IInstallerCommander,
+  IWebClientCommander,
+  IVisualizerCommander,
 } from '@Cli/Types';
 
 export const CliModule = new ContainerModule((bind) => {
@@ -31,15 +42,21 @@ export const CliModule = new ContainerModule((bind) => {
   bind<IManageService>(CliSymbols.ManageService).to(ManageService).inSingletonScope();
 
   // Templates
+  bind<IPrettierTemplate>(CliSymbols.PrettierTemplate).to(PrettierTemplate).inTransientScope();
+  bind<IEslintTemplate>(CliSymbols.EslintTemplate).to(EslintTemplate).inTransientScope();
   bind<IPackageTemplate>(CliSymbols.PackageTemplate).to(PackageTemplate).inTransientScope();
   bind<ITsconfigTemplate>(CliSymbols.TsconfigTemplate).to(TsconfigTemplate).inTransientScope();
+  bind<IServiceTemplate>(CliSymbols.ServiceTemplate).to(ServiceTemplate).inTransientScope();
 
   // Menus
-  bind<IAbstractMenu>(CliSymbols.ServerMenu).to(ServerMenu).inTransientScope();
   bind<IServerCommander>(CliSymbols.ServerCommander).to(ServerCommander).inSingletonScope();
-  bind<IAbstractMenu>(CliSymbols.EdgeMenu).to(EdgeMenu).inTransientScope();
-  bind<IAbstractMenu>(CliSymbols.VisualizerMenu).to(VisualizerMenu).inTransientScope();
-  bind(CliSymbols.InstallCommander).to(InstallerCommander).inSingletonScope();
+  bind<IWebClientCommander>(CliSymbols.WebClientCommander)
+    .to(WebClientCommander)
+    .inSingletonScope();
+  bind<IVisualizerCommander>(CliSymbols.VisualizerCommander)
+    .to(VisualizerCommander)
+    .inSingletonScope();
+  bind<IInstallerCommander>(CliSymbols.InstallCommander).to(InstallerCommander).inSingletonScope();
   bind<IAbstractMenu>(CliSymbols.InstallerMenu).to(InstallerMenu).inTransientScope();
   bind<IManageCommander>(CliSymbols.ManageCommander).to(ManageCommander).inSingletonScope();
   bind<IAbstractMenu>(CliSymbols.ManageMenu).to(ManageMenu).inTransientScope();
