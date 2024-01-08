@@ -1,13 +1,7 @@
-import { NInstallerMenu } from './installer.menu';
+import type { UnknownObject } from '../../utility';
 
 export interface IInstallerCommander {
-  makeProjectDirectory(path: string): Promise<void>;
-  buildPackage(path: string, options: NInstallerCommander.PackageOptions): Promise<void>;
-  makeProjectDirectories(
-    path: string,
-    options: NInstallerCommander.DirectoriesOptions
-  ): Promise<void>;
-  makeSchemaEntryPoint(path: string, application: string): Promise<void>;
+  build(path: string, options: NInstallerCommander.PackageOptions): Promise<void>;
 }
 
 export namespace NInstallerCommander {
@@ -16,23 +10,24 @@ export namespace NInstallerCommander {
     | 'chaminjector/web-client@latest'
     | 'chaminjector/visualizer@latest';
 
-  export type PackageOptions = {
-    name: string;
+  export type Options = {
+    service: string;
     description?: string;
     version: string;
-  };
-
-  export type TsconfigBuildFormatExtends = 'CommonJS' | 'Typescript';
-  export type TsconfigOptions = {
-    application: string;
-    formatExtends: TsconfigBuildFormatExtends[];
-    platformParts: NInstallerMenu.PlatformPartFields[];
-  };
-
-  export type DirectoriesOptions = {
-    service: string;
     server: boolean;
     webClient: boolean;
     visualizer: boolean;
+  };
+
+  export type PackageOptions = {
+    service: Options['service'];
+    description?: Options['description'];
+    version: Options['version'];
+  };
+
+  export type TsconfigBuildFormatExtends = 'CommonJS' | 'Typescript';
+
+  export type DirectoriesOptions = {
+    service: Options['service'];
   };
 }

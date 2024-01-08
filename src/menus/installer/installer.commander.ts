@@ -11,30 +11,18 @@ import type {
 
 @injectable()
 export class InstallerCommander implements IInstallerCommander {
-  public async buildPackage(
-    path: string,
-    options: NInstallerCommander.PackageOptions
-  ): Promise<void> {
-    const template = container.get<IPackageTemplate>(CliSymbols.PackageTemplate).structure({
-      name: options.name,
-      description: options.description ?? `${options.name} @chaminjector schema.`,
-      typesVersions: {
-        '>=4.2': {
-          '*': ['_types/*', 'types/*'],
-        },
-      },
-      version: '0.0.1',
+  public async build(path: string, options: NInstallerCommander.PackageOptions): Promise<void> {
+    await this._makeProjectDirectory(path);
+    await this._makeProjectDirectories(path, options.service);
+    await this._makeSchemaEntryPoint(path, options.service);
+    await this._makePackage(path, {
+      service: options.service,
+      description: options.description,
+      version: options.version,
     });
-
-    try {
-      await fse.writeJSON(path + '/package.json', template);
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
   }
 
-  public async makeProjectDirectory(path: string): Promise<void> {
+  private async _makeProjectDirectory(path: string): Promise<void> {
     try {
       const exists = await fse.pathExists(path);
       if (!exists) {
@@ -46,21 +34,18 @@ export class InstallerCommander implements IInstallerCommander {
     }
   }
 
-  public async makeProjectDirectories(
-    path: string,
-    options: NInstallerCommander.DirectoriesOptions
-  ): Promise<void> {
+  private async _makeProjectDirectories(path: string, service: string): Promise<void> {
     try {
       await fse.ensureDir(path + '/configs');
-      await fse.ensureDir(path + `/src/${options.service}/domains`);
-      await fse.ensureDir(path + `/types/${options.service}/domains`);
+      await fse.ensureDir(path + `/src/${service}/domains`);
+      await fse.ensureDir(path + `/types/${service}/domains`);
     } catch (e) {
       console.error(e);
       throw e;
     }
   }
 
-  public async makeSchemaEntryPoint(path: string, service: string): Promise<void> {
+  private async _makeSchemaEntryPoint(path: string, service: string): Promise<void> {
     const engine = container.get<IServiceTemplate>(CliSymbols.ServiceTemplate);
     const appPath = path + `/src/${service}/${service}`;
 
@@ -74,6 +59,29 @@ export class InstallerCommander implements IInstallerCommander {
       await fse.writeFile(`${appPath}.server.app.ts`, engine.getServiceServer(service));
       await fse.writeFile(`${appPath}.web-client.app.ts`, engine.getServiceWebClient(service));
     } catch (e) {
+      throw e;
+    }
+  }
+
+  private async _makePackage(
+    path: string,
+    options: NInstallerCommander.PackageOptions
+  ): Promise<void> {
+    const template = container.get<IPackageTemplate>(CliSymbols.PackageTemplate).structure({
+      name: options.service,
+      description: options.description ?? `${options.service} @chaminjector schema.`,
+      typesVersions: {
+        '>=4.2': {
+          '*': ['_types/*', 'types/*'],
+        },
+      },
+      version: options.version ?? '0.0.1',
+    });
+
+    try {
+      await fse.writeJSON(path + '/package.json', template);
+    } catch (e) {
+      console.error(e);
       throw e;
     }
   }

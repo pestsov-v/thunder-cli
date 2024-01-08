@@ -1,8 +1,8 @@
 import { execa, fse, injectable } from '@Packages';
-
-import type { ICodeFormatterCommander, IEslintTemplate, IPrettierTemplate } from '@Cli/Types';
 import { container } from '@Cli/Container';
 import { CliSymbols } from '@Cli/Symbols';
+
+import type { ICodeFormatterCommander, IEslintTemplate, IPrettierTemplate } from '@Cli/Types';
 
 @injectable()
 export class CodeFormatterCommander implements ICodeFormatterCommander {

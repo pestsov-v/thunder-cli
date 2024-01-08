@@ -8,10 +8,20 @@ import { CliSymbols } from '@Cli/Symbols';
 export class WebClientCommander implements IWebClientCommander {
   public async install(path: string): Promise<void> {
     try {
-      await execa('npm', ['install', '@chaminjector/web-client@latest'], {
-        stdio: 'inherit',
-        cwd: path,
-      });
+      await Promise.all([
+        await execa('npm', ['install', '@chaminjector/web-client@latest'], {
+          stdio: 'inherit',
+          cwd: path,
+        }),
+        await execa(
+          'npm',
+          ['install', '--save-dev', 'next@latest', 'react@latest', 'react-dom@latest'],
+          {
+            stdio: 'inherit',
+            cwd: path,
+          }
+        ),
+      ]);
     } catch (e) {
       console.error(e);
       throw e;

@@ -34,10 +34,33 @@ export class InstallerMenu extends AbstractMenu implements IAbstractMenu {
 
   private _promptNames = {
     PROJECT_DIRECTORY_PATH: 'PROJECT_DIRECTORY_PATH',
+    PACKAGE_NAME: 'PACKAGE_NAME',
+    PACKAGE_DESCRIPTION: 'PACKAGE_DESCRIPTION',
+    PACKAGE_VERSION: 'PACKAGE_VERSION',
+    TYPESCRIPT_EXTENDS: 'TYPESCRIPT_EXTENDS',
+    PLATFORM_PARTS: 'PLATFORM_PARTS',
+    ESLINT_WITH_PRETTIER: 'ESLINT_WITH_PRETTIER',
   };
 
   private _promptMessages = {
     PROJECT_DIRECTORY_PATH: 'Where is install schemas project?',
+    PACKAGE_NAME: 'Enter the schema name',
+    PACKAGE_DESCRIPTION: 'Enter the schema description',
+    PACKAGE_VERSION: 'Enter the schema version in x.x.x format',
+    TYPESCRIPT_EXTENDS: 'Which compilation format to include in the project?',
+    PLATFORM_PARTS: 'Choose which parts of the platform to install and which ones to connect',
+    ESLINT_WITH_PRETTIER: 'Add ESLint with prettier in schema?',
+  };
+
+  private _platformParts = {
+    WEB_CLIENT: 'Web-client',
+    SERVER: 'Server',
+    VISUALIZER: 'Visualizer',
+  };
+
+  private _typescriptExtends = {
+    COMMON_JS: 'CommonJS',
+    TYPESCRIPT: 'Typescript',
   };
 
   public async menu(): Promise<void> {
@@ -46,14 +69,13 @@ export class InstallerMenu extends AbstractMenu implements IAbstractMenu {
         type: 'input',
         name: this._promptNames.PROJECT_DIRECTORY_PATH,
         message: this._promptMessages.PROJECT_DIRECTORY_PATH,
-        default: `./loc/des`,
+        default: `./test_project`,
       });
 
-      await this._installerCommander.makeProjectDirectory(PROJECT_DIRECTORY_PATH);
-
       const answers = await this._installPackageForm();
-      await this._installerCommander.buildPackage(PROJECT_DIRECTORY_PATH, {
-        name: answers.name,
+
+      await this._installerCommander.build(PROJECT_DIRECTORY_PATH, {
+        service: answers.name,
         description: answers.description,
         version: answers.version,
       });
@@ -62,30 +84,10 @@ export class InstallerMenu extends AbstractMenu implements IAbstractMenu {
         formatExtends: answers.tsExtends,
         platformParts: answers.platformParts,
       });
-      await this._codeFormatterCommander.build(PROJECT_DIRECTORY_PATH);
-      await this._installerCommander.makeProjectDirectories(PROJECT_DIRECTORY_PATH, {
-        server: true,
-        service: answers.name,
-        webClient: true,
-        visualizer: true,
-      });
-      await this._installerCommander.makeSchemaEntryPoint(PROJECT_DIRECTORY_PATH, answers.name);
       await this._webClientCommander.build(PROJECT_DIRECTORY_PATH, answers.name);
+      await this._codeFormatterCommander.build(PROJECT_DIRECTORY_PATH);
 
-      await Promise.all([
-        answers.platformParts.includes('Server')
-          ? await this._serverCommander.install(PROJECT_DIRECTORY_PATH)
-          : true,
-        answers.platformParts.includes('Web-client')
-          ? await this._webClientCommander.install(PROJECT_DIRECTORY_PATH)
-          : true,
-        answers.platformParts.includes('Visualizer')
-          ? await this._visualizerCommander.install(PROJECT_DIRECTORY_PATH)
-          : true,
-        answers.eslintPrettier
-          ? await this._codeFormatterCommander.install(PROJECT_DIRECTORY_PATH)
-          : true,
-      ]);
+      await this.install(PROJECT_DIRECTORY_PATH, answers);
     } catch (e) {
       console.error(e);
       throw e;
@@ -94,35 +96,43 @@ export class InstallerMenu extends AbstractMenu implements IAbstractMenu {
 
   private async _installPackageForm(): Promise<NInstallerMenu.PackageFormFields> {
     const answers = await inquirer.prompt<NInstallerMenu.PackageFormInputs>({
-      PACKAGE_NAME: {
+      [this._promptNames.PACKAGE_NAME]: {
         type: 'input',
-        message: 'Enter the schema name',
+        message: this._promptMessages.PACKAGE_NAME,
       },
-      PACKAGE_DESCRIPTION: {
+      [this._promptNames.PACKAGE_DESCRIPTION]: {
         type: 'input',
-        message: 'Enter the schema description',
+        message: this._promptMessages.PACKAGE_DESCRIPTION,
         default: 'Implemented "<name> @chaminjector schema" template pattern for description',
       },
-      PACKAGE_VERSION: {
+      [this._promptNames.PACKAGE_VERSION]: {
         type: 'input',
-        message: 'Enter the schema version in x.x.x format',
+        message: this._promptMessages.PACKAGE_VERSION,
         default: '0.0.1',
       },
-      TYPESCRIPT_EXTENDS: {
+      [this._promptNames.TYPESCRIPT_EXTENDS]: {
         type: 'checkbox',
-        message: 'Which compilation format to include in the project?',
-        choices: ['CommonJS', 'Typescript'],
-        default: ['CommonJS', 'Typescript'],
+        message: this._promptMessages.TYPESCRIPT_EXTENDS,
+        choices: [this._typescriptExtends.COMMON_JS, this._typescriptExtends.TYPESCRIPT],
+        default: [this._typescriptExtends.COMMON_JS, this._typescriptExtends.TYPESCRIPT],
       },
-      PLATFORM_PARTS: {
+      [this._promptNames.PLATFORM_PARTS]: {
         type: 'checkbox',
-        message: 'Choose which parts of the platform to install and which ones to connect',
-        choices: ['Web-client', 'Server', 'Visualizer'],
-        default: ['Web-client', 'Server', 'Visualizer'],
+        message: this._promptNames.PLATFORM_PARTS,
+        choices: [
+          this._platformParts.WEB_CLIENT,
+          this._platformParts.SERVER,
+          this._platformParts.VISUALIZER,
+        ],
+        default: [
+          this._platformParts.WEB_CLIENT,
+          this._platformParts.SERVER,
+          this._platformParts.VISUALIZER,
+        ],
       },
-      ESLINT_WITH_PRETTIER: {
+      [this._promptNames.ESLINT_WITH_PRETTIER]: {
         type: 'confirm',
-        message: 'Add ESLint with prettier in schema?',
+        message: this._promptMessages.ESLINT_WITH_PRETTIER,
         default: true,
       },
     });
@@ -137,5 +147,24 @@ export class InstallerMenu extends AbstractMenu implements IAbstractMenu {
       platformParts: answers.PLATFORM_PARTS,
       eslintPrettier: answers.ESLINT_WITH_PRETTIER,
     };
+  }
+
+  private async install(path: string, answers: NInstallerMenu.PackageFormFields): Promise<void> {
+    try {
+      await Promise.all([
+        answers.platformParts.includes('Server') ? await this._serverCommander.install(path) : true,
+        answers.platformParts.includes('Web-client')
+          ? await this._webClientCommander.install(path)
+          : true,
+        answers.platformParts.includes('Visualizer')
+          ? await this._visualizerCommander.install(path)
+          : true,
+        answers.eslintPrettier ? await this._codeFormatterCommander.install(path) : true,
+        await this._typescriptCommander.install(path),
+      ]);
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
   }
 }

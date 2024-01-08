@@ -1,12 +1,8 @@
 import { execa, fse, injectable } from '@Packages';
-import {
-  ITsconfigTemplate,
-  ITypescriptCommander,
-  NInstallerCommander,
-  NTypescriptCommander,
-} from '@Cli/Types';
 import { container } from '@Cli/Container';
 import { CliSymbols } from '@Cli/Symbols';
+
+import { ITsconfigTemplate, ITypescriptCommander, NTypescriptCommander } from '@Cli/Types';
 
 @injectable()
 export class TypescriptCommander implements ITypescriptCommander {

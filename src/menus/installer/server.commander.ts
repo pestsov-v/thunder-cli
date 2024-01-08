@@ -18,7 +18,7 @@ export class ServerCommander implements IServerCommander {
     }
   }
 
-  public async connect(path: string): Promise<void> {
+  public async build(path: string): Promise<void> {
     try {
       await fse.writeFile(
         path + '/server.ts',

@@ -1,7 +1,8 @@
 import { execa, fse, injectable } from '@Packages';
-import type { IServiceTemplate, IVisualizerCommander } from '@Cli/Types';
 import { container } from '@Cli/Container';
 import { CliSymbols } from '@Cli/Symbols';
+
+import type { IServiceTemplate, IVisualizerCommander } from '@Cli/Types';
 
 @injectable()
 export class VisualizerCommander implements IVisualizerCommander {
@@ -17,7 +18,7 @@ export class VisualizerCommander implements IVisualizerCommander {
     }
   }
 
-  public async connect(path: string): Promise<void> {
+  public async build(path: string): Promise<void> {
     await fse.writeFile(
       path + '/visualizer.ts',
       container.get<IServiceTemplate>(CliSymbols.ServiceTemplate).visualizerConnectTemplate
