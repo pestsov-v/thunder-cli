@@ -69,7 +69,7 @@ export class InstallerMenu extends AbstractMenu implements IAbstractMenu {
         type: 'input',
         name: this._promptNames.PROJECT_DIRECTORY_PATH,
         message: this._promptMessages.PROJECT_DIRECTORY_PATH,
-        default: `./test_project`,
+        default: `.`,
       });
 
       const answers = await this._installPackageForm();

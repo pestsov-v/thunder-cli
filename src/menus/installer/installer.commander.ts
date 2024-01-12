@@ -7,6 +7,7 @@ import type {
   IInstallerCommander,
   NInstallerCommander,
   IPackageTemplate,
+  IInstallerTemplate,
 } from '@Cli/Types';
 
 @injectable()
@@ -20,6 +21,7 @@ export class InstallerCommander implements IInstallerCommander {
       description: options.description,
       version: options.version,
     });
+    await this._makeStarter(path);
   }
 
   private async _makeProjectDirectory(path: string): Promise<void> {
@@ -37,8 +39,8 @@ export class InstallerCommander implements IInstallerCommander {
   private async _makeProjectDirectories(path: string, service: string): Promise<void> {
     try {
       await fse.ensureDir(path + '/configs');
-      await fse.ensureDir(path + `/src/${service}/domains`);
-      await fse.ensureDir(path + `/types/${service}/domains`);
+      await fse.ensureDir(path + `/src/services/${service}/domains`);
+      await fse.ensureDir(path + `/types/services/${service}/domains`);
     } catch (e) {
       console.error(e);
       throw e;
@@ -47,7 +49,7 @@ export class InstallerCommander implements IInstallerCommander {
 
   private async _makeSchemaEntryPoint(path: string, service: string): Promise<void> {
     const engine = container.get<IServiceTemplate>(CliSymbols.ServiceTemplate);
-    const appPath = path + `/src/${service}/${service}`;
+    const appPath = path + `/src/services/${service}/${service}`;
 
     try {
       await fse.writeFile(path + '/configs/web-client.development.config.json', '');
@@ -56,8 +58,8 @@ export class InstallerCommander implements IInstallerCommander {
       await fse.writeFile(path + '/src/services.ts', engine.getServices(service));
       await fse.writeFile(path + `/src/server.ts`, engine.getServiceServerEntry(service));
       await fse.writeFile(path + `/src/web-client.ts`, engine.getServiceWebClientEntry(service));
-      await fse.writeFile(`${appPath}.server.app.ts`, engine.getServiceServer(service));
-      await fse.writeFile(`${appPath}.web-client.app.ts`, engine.getServiceWebClient(service));
+      await fse.writeFile(`${appPath}.server.entry.ts`, engine.getServiceServer(service));
+      await fse.writeFile(`${appPath}.web-client.entry.ts`, engine.getServiceWebClient(service));
     } catch (e) {
       throw e;
     }
@@ -84,5 +86,12 @@ export class InstallerCommander implements IInstallerCommander {
       console.error(e);
       throw e;
     }
+  }
+
+  private async _makeStarter(path: string): Promise<void> {
+    const engine = container.get<IInstallerTemplate>(CliSymbols.InstallerTemplate);
+
+    await fse.writeFile(path + '/server.ts', engine.server);
+    await fse.writeFile(path + '/visualizer.ts', engine.visualizer);
   }
 }

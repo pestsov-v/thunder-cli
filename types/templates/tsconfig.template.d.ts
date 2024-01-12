@@ -24,7 +24,15 @@ export namespace NTsconfigTemplate {
     baseUrl?: string;
     paths?: Record<string, string[]>;
     rootDir?: string;
+    jsx?: string;
     declaration?: boolean;
+    lib?: string[];
+    allowJs?: boolean;
+    skipLibCheck?: boolean;
+    noEmit?: boolean;
+    incremental?: boolean;
+    resolveJsonModule?: boolean;
+    isolatedModules?: boolean;
     emitDeclarationOnly?: boolean;
   };
   export type Structure = {

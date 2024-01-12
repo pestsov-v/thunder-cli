@@ -2,7 +2,7 @@ import { execa, fse, injectable } from '@Packages';
 import { CliSymbols } from '@Cli/Symbols';
 import { container } from '@Cli/Container';
 
-import type { IServerCommander, IServiceTemplate } from '@Cli/Types';
+import type { IInstallerTemplate, IServerCommander, IServiceTemplate } from '@Cli/Types';
 
 @injectable()
 export class ServerCommander implements IServerCommander {
@@ -22,7 +22,7 @@ export class ServerCommander implements IServerCommander {
     try {
       await fse.writeFile(
         path + '/server.ts',
-        container.get<IServiceTemplate>(CliSymbols.ServiceTemplate).serverConnectTemplate
+        container.get<IInstallerTemplate>(CliSymbols.InstallerTemplate).server
       );
     } catch (e) {
       console.error(e);

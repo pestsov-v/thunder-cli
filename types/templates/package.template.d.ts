@@ -20,7 +20,10 @@ export namespace NPackageTemplate {
     main: 'index.ts';
     types: 'index.ts';
     scripts: {
-      'start:dev': string;
+      'server:dev': string;
+      'web-client:dev': string;
+      'server:prod': string;
+      'web-client:prod': string;
     } & StringObject;
     keywords: string[];
   };

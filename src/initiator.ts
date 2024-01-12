@@ -1,7 +1,7 @@
 import { injectable, inject } from '@Packages';
 import { CliSymbols } from '@Cli/Symbols';
 
-import type { IDiscoveryService, IInitiator, IManageService } from '@Cli/Types';
+import type { IDiscoveryService, IInitiator, IMenuService } from '@Cli/Types';
 
 @injectable()
 export class Initiator implements IInitiator {
@@ -9,7 +9,7 @@ export class Initiator implements IInitiator {
     @inject(CliSymbols.DiscoveryService)
     private readonly _discoveryService: IDiscoveryService,
     @inject(CliSymbols.ManageService)
-    private readonly _manageService: IManageService
+    private readonly _manageService: IMenuService
   ) {}
   public async start(): Promise<void> {
     await this._discoveryService.start();

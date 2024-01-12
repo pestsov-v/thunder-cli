@@ -9,6 +9,7 @@ export const CliSymbols = {
   PackageTemplate: Symbol('PackageTemplate'),
   TsconfigTemplate: Symbol('TsconfigTemplate'),
   ServiceTemplate: Symbol('ServiceTemplate'),
+  InstallerTemplate: Symbol('InstallerTemplate'),
 
   // Menus
   ServerCommander: Symbol('ServerCommander'),

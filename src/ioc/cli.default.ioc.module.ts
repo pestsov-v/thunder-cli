@@ -1,13 +1,14 @@
 import { ContainerModule } from '@Packages';
 import { CliSymbols } from '@Cli/Symbols';
 import { Initiator } from '../initiator';
-import { DiscoveryService, ManageService } from '../services';
+import { DiscoveryService, MenuService } from '../services';
 import {
   EslintTemplate,
   PackageTemplate,
   PrettierTemplate,
   TsconfigTemplate,
   ServiceTemplate,
+  InstallerTemplate,
 } from '../templates';
 import {
   CodeFormatterCommander,
@@ -27,7 +28,7 @@ import type {
   IEslintTemplate,
   IInitiator,
   IManageCommander,
-  IManageService,
+  IMenuService,
   IPackageTemplate,
   IPrettierTemplate,
   IServerCommander,
@@ -38,12 +39,13 @@ import type {
   IVisualizerCommander,
   ICodeFormatterCommander,
   ITypescriptCommander,
+  IInstallerTemplate,
 } from '@Cli/Types';
 
 export const CliModule = new ContainerModule((bind) => {
   // Services
   bind<IDiscoveryService>(CliSymbols.DiscoveryService).to(DiscoveryService).inSingletonScope();
-  bind<IManageService>(CliSymbols.ManageService).to(ManageService).inSingletonScope();
+  bind<IMenuService>(CliSymbols.ManageService).to(MenuService).inSingletonScope();
 
   // Templates
   bind<IPrettierTemplate>(CliSymbols.PrettierTemplate).to(PrettierTemplate).inTransientScope();
@@ -51,6 +53,7 @@ export const CliModule = new ContainerModule((bind) => {
   bind<IPackageTemplate>(CliSymbols.PackageTemplate).to(PackageTemplate).inTransientScope();
   bind<ITsconfigTemplate>(CliSymbols.TsconfigTemplate).to(TsconfigTemplate).inTransientScope();
   bind<IServiceTemplate>(CliSymbols.ServiceTemplate).to(ServiceTemplate).inTransientScope();
+  bind<IInstallerTemplate>(CliSymbols.InstallerTemplate).to(InstallerTemplate).inTransientScope();
 
   // Menus
   bind<IServerCommander>(CliSymbols.ServerCommander).to(ServerCommander).inSingletonScope();

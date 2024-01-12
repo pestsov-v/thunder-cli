@@ -19,14 +19,21 @@ export class DiscoveryService extends AbstractService implements IDiscoveryServi
   }
 
   public async init(): Promise<boolean> {
-    return this._absDiscoveryService.init();
+    try {
+      this._absDiscoveryService.setConfigSlice('cli');
+      await this._absDiscoveryService.init();
+      return true;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
   }
 
   public async destroy(): Promise<void> {
     await this._absDiscoveryService.destroy();
   }
 
-  public get nodeEnv() {
+  public get nodeEnv(): string {
     return this._absDiscoveryService.nodeEnv;
   }
 

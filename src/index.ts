@@ -1,4 +1,5 @@
-#!/usr/bin/node
+#!/usr/bin/env node
+'use strict';
 
 import { container } from '@Cli/Container';
 import { CliSymbols } from '@Cli/Symbols';

@@ -1,8 +1,8 @@
 import { execa, fse, injectable } from '@Packages';
-
-import type { IServiceTemplate, IWebClientCommander } from '@Cli/Types';
 import { container } from '@Cli/Container';
 import { CliSymbols } from '@Cli/Symbols';
+
+import type { IServiceTemplate, IWebClientCommander } from '@Cli/Types';
 
 @injectable()
 export class WebClientCommander implements IWebClientCommander {
@@ -15,7 +15,14 @@ export class WebClientCommander implements IWebClientCommander {
         }),
         await execa(
           'npm',
-          ['install', '--save-dev', 'next@latest', 'react@latest', 'react-dom@latest'],
+          [
+            'install',
+            '--save-dev',
+            'next@latest',
+            'react@latest',
+            'react-dom@latest',
+            '@types/react',
+          ],
           {
             stdio: 'inherit',
             cwd: path,
@@ -32,10 +39,11 @@ export class WebClientCommander implements IWebClientCommander {
     const engine = container.get<IServiceTemplate>(CliSymbols.ServiceTemplate);
 
     try {
-      await fse.ensureDir(path + `/src/${service}/pages`);
-      await fse.writeFile(path + `/src/${service}/pages/_app.tsx`, engine.pagesApp);
-      await fse.writeFile(path + `/src/${service}/pages/_document.tsx`, engine.pagesApp);
-      await fse.writeFile(path + `/src/${service}/pages/index.tsx`, engine.pagesHome);
+      await fse.ensureDir(path + `/src/pages`);
+      await fse.writeFile(path + `/src/pages/_app.tsx`, engine.pagesApp);
+      await fse.writeFile(path + `/src/pages/_document.tsx`, engine.pagesDocument);
+      await fse.writeFile(path + `/src/pages/index.tsx`, engine.pagesHome);
+      await fse.writeFile(path + `/src/pages/globals.css`, '');
     } catch (e) {
       console.error(e);
       throw e;

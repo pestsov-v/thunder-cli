@@ -1,6 +1,4 @@
 export interface IServiceTemplate {
-  readonly serverConnectTemplate: string;
-  readonly visualizerConnectTemplate: string;
   readonly pagesApp: string;
   readonly pagesDocument: string;
   readonly pagesHome: string;

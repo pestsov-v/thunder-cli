@@ -2,11 +2,11 @@ import { injectable, inject } from '@Packages';
 import { CliSymbols } from '@Cli/Symbols';
 import { AbstractService } from './abstract.service';
 
-import type { IAbstractMenu, IDiscoveryService, IManageService } from '@Cli/Types';
+import type { IAbstractMenu, IDiscoveryService, IMenuService } from '@Cli/Types';
 
 @injectable()
-export class ManageService extends AbstractService implements IManageService {
-  protected readonly _SERVICE_NAME = ManageService.name;
+export class MenuService extends AbstractService implements IMenuService {
+  protected readonly _SERVICE_NAME = MenuService.name;
 
   constructor(
     @inject(CliSymbols.DiscoveryService)
